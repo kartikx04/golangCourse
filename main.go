@@ -1,13 +1,18 @@
 package main
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+	"log"
+)
 
 type Truck struct {
 	id string
 }
 
-func processTruck(truck Truck) {
+func processTruck(truck Truck) error {
 	fmt.Printf("Processing truck : %s\n", truck.id)
+	return errors.New("an error occurred")
 }
 
 func main() {
@@ -20,7 +25,11 @@ func main() {
 
 	for _, truck := range Trucks {
 		fmt.Printf("Truck %s arrived\n", truck.id)
-		processTruck(truck)
+
+		if err := processTruck(truck); err != nil {
+			log.Fatalf("error processing truck: %s", err)
+		}
+
 	}
 
 }
