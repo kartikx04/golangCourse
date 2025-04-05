@@ -6,13 +6,27 @@ import (
 	"log"
 )
 
+var (
+	ErrNotImplemented = errors.New("not implemented")
+	ErrTruckNotFound  = errors.New("truck not found")
+)
+
 type Truck struct {
 	id string
 }
 
+// A method is a function with a receiver arguement
+func (t Truck) loadCargo() error {
+	return ErrTruckNotFound
+}
+
+// processTruck() handles the loading and unloading of a truck
 func processTruck(truck Truck) error {
 	fmt.Printf("Processing truck : %s\n", truck.id)
-	return errors.New("an error occurred")
+	if err := truck.loadCargo(); err != nil {
+		return fmt.Errorf("cargo not loaded: %w", err)
+	}
+	return ErrNotImplemented
 }
 
 func main() {
