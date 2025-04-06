@@ -11,22 +11,36 @@ var (
 	ErrTruckNotFound  = errors.New("truck not found")
 )
 
-type Truck struct {
-	id string
+type Truck interface {
+	loadCargo() error
+	unloadCargo() error
+}
+
+type NormalTruck struct {
+	id    string
+	cargo int
+}
+
+type ElectricTruck struct {
+	id      string
+	cargo   int
+	battery float64
 }
 
 // A method is a function with a receiver arguement
-func (t *Truck) loadCargo() error {
+func (t *NormalTruck) loadCargo() error {
+	t.cargo += 1
 	return nil
 }
 
-func (t *Truck) unloadCargo() error {
+func (t *NormalTruck) unloadCargo() error {
+	t.cargo = 0
 	return nil
 }
 
 // processTruck() handles the loading and unloading of a truck
 func processTruck(truck Truck) error {
-	fmt.Printf("Processing truck : %s\n", truck.id)
+	fmt.Printf("processing truck: %+v\n", truck)
 	if err := truck.loadCargo(); err != nil {
 		return fmt.Errorf("cargo not loaded: %w", err)
 	}
@@ -36,20 +50,30 @@ func processTruck(truck Truck) error {
 	return nil
 }
 
+// Implemented loadCargo for type ElectricTruck
+func (e *ElectricTruck) loadCargo() error {
+	e.cargo += 1
+	e.battery -= 1
+	return nil
+}
+
+func (e *ElectricTruck) unloadCargo() error {
+	e.cargo = 0
+	e.battery -= 1
+	return nil
+}
+
 func main() {
-	Trucks := []Truck{
-		{id: "Truck-1"},
-		{id: "Truck-2"},
-		{id: "Truck-3"},
-		{id: "Truck-4"},
+	nt := &NormalTruck{id: "1"}
+	if err := processTruck(nt); err != nil {
+		log.Fatalf("error processing truck: %s", err)
 	}
 
-	for _, truck := range Trucks {
-		fmt.Printf("Truck %s arrived\n", truck.id)
-
-		if err := processTruck(truck); err != nil {
-			log.Fatalf("error processing truck: %s", err)
-		}
-
+	et := &ElectricTruck{id: "1"}
+	if err := processTruck(et); err != nil {
+		log.Fatalf("error processing truck: %s", err)
 	}
+
+	fmt.Println(nt.cargo)
+	fmt.Println(et.battery)
 }
