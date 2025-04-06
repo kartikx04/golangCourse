@@ -64,16 +64,11 @@ func (e *ElectricTruck) unloadCargo() error {
 }
 
 func main() {
-	nt := &NormalTruck{id: "1"}
-	if err := processTruck(nt); err != nil {
-		log.Fatalf("error processing truck: %s", err)
-	}
+	t := NormalTruck{cargo: 0}
+	fillTruckCargo(&t)
+	log.Println(t)
+}
 
-	et := &ElectricTruck{id: "1"}
-	if err := processTruck(et); err != nil {
-		log.Fatalf("error processing truck: %s", err)
-	}
-
-	fmt.Println(nt.cargo)
-	fmt.Println(et.battery)
+func fillTruckCargo(t *NormalTruck) {
+	t.cargo = 100
 }
