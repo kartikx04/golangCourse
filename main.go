@@ -16,8 +16,12 @@ type Truck struct {
 }
 
 // A method is a function with a receiver arguement
-func (t Truck) loadCargo() error {
-	return ErrTruckNotFound
+func (t *Truck) loadCargo() error {
+	return nil
+}
+
+func (t *Truck) unloadCargo() error {
+	return nil
 }
 
 // processTruck() handles the loading and unloading of a truck
@@ -26,7 +30,10 @@ func processTruck(truck Truck) error {
 	if err := truck.loadCargo(); err != nil {
 		return fmt.Errorf("cargo not loaded: %w", err)
 	}
-	return ErrNotImplemented
+	if err := truck.unloadCargo(); err != nil {
+		return fmt.Errorf("cargo not loaded: %w", err)
+	}
+	return nil
 }
 
 func main() {
@@ -45,5 +52,4 @@ func main() {
 		}
 
 	}
-
 }
